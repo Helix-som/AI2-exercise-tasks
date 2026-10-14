@@ -1,3 +1,4 @@
 name: Helix Aldinger-Sommer
 Study course: Digital Farming
 Pronouns: they,them
+Hobby: gardening
