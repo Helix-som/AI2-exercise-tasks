@@ -31,7 +31,11 @@ SAMPLE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "exe
 #      and std=[0.229, 0.224, 0.225]
 #
 # Store the result in a variable called 'transform'.
-transform = None
+transform = transforms.Compose([
+    transforms.Resize((32, 32)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
 
 
 # ===========================================================================
@@ -52,23 +56,33 @@ class SimpleImageDataset(Dataset):
         #   Step 1: Create a mapping from class name to integer index.
         #           e.g. {"class_a": 0, "class_b": 1} (Hint: Use .enumerate() to get the index)
         #           Store as self.class_to_idx.
-        self.class_to_idx = None
+        self.class_to_idx = {cls: idx for idx, cls in enumerate(self.classes)}
         #   Step 2: Build a list of (file_path, label) tuples.
         #           Loop over each class folder, then over each file inside it.
         #           Store the full path and the integer label.
         #           Store as self.samples.
-        self.samples = None
+        self.samples = []
+        for cls in self.classes:
+            cls_dir = os.path.join(root_dir, cls)
+            for fname in os.listdir(cls_dir):
+                fpath = os.path.join(cls_dir, fname)
+                if os.path.isfile(fpath):
+                    self.samples.append((fpath, self.class_to_idx[cls]))
 
     def __len__(self):
         #   Return the total number of samples.
-        pass
+        return len(self.samples)
 
     def __getitem__(self, idx):
         #   Step 1: Get the file path and label from self.samples[idx].
+        fpath, label = self.samples[idx]
         #   Step 2: Open the image with PIL and convert to "RGB".
+        image = Image.open(fpath).convert("RGB")
         #   Step 3: Apply self.transform if it is not None.
+        if self.transform:
+            image = self.transform(image)
         #   Step 4: Return (image, label).
-        pass
+        return image, label
 
 if __name__ == "__main__":
     # ===========================================================================
@@ -76,29 +90,39 @@ if __name__ == "__main__":
     # ===========================================================================
     # Step 1: Instantiate SimpleImageDataset with SAMPLE_DIR
     #         and the transform from Task 1.
-    dataset = None
-    dataloader = None
+    dataset = SimpleImageDataset(SAMPLE_DIR, transform=transform)
+    dataloader = DataLoader(dataset, batch_size=2, shuffle=True, num_workers=0)
     #
     # Step 2: Print len(dataset) and dataset.classes.
     #
+    print(f"  Total samples: {len(dataset)}")
+    print(f"  Classes: {dataset.classes}")
     # Step 3: Create a DataLoader with batch_size=2, shuffle=True, num_workers=0.
     #
+
     # Step 4: Fetch one batch using next(iter(dataloader)).
     #         Print the image tensor shape and the labels.
-    
+    images, labels = next(iter(dataloader))
+    print(f"  Batch image tensor shape: {images.shape}")
+    print(f"  Batch labels: {labels}")
     
     # ===========================================================================
     # Task 4: Inspect a Single Sample
     # ===========================================================================
     # Step 1: Access the first sample directly: image, label = dataset[0]
     #
+    image, label = dataset[0]
     # Step 2: Print the image tensor shape, its min and max pixel values,
     #         and the label.
     #
+    print(f"  Image tensor shape: {image.shape}")
+    print(f"  Min pixel value: {image.min().item()}")
+    print(f"  Max pixel value: {image.max().item()}")
+    print(f"  Label: {label}")
     # Step 3: The pixel values are no longer in [0, 1]. Why?
     #         Write your answer as a comment.
     #         Hint: think about what Normalize() does.
-    
+    #Normalize standardizes each color channel by subtracting the given mean and dividing by the standard deviation, so the pixel values are centered around 0 with roughly unit variance.
     
     # ===========================================================================
     # Verification

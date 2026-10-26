@@ -24,11 +24,18 @@ class TinyNet(nn.Module):
 #
 #         Each MaxPool2d(2) halves the spatial dimensions.
 #         Input 32×32 → after block 1: 16×16 → after block 2: 8×8.
-        self.features = None
+        self.features = nn.Sequential(
+            nn.Conv2d(in_channels=3, out_channels=8, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        )
 # Step 2: Define self.classifier as nn.Sequential with one Linear layer.
 #         Input size = 16 channels × 8 × 8 = 1024.
 #         Output size = num_classes.
-        self.classifier = None
+        self.classifier = nn.Linear(in_features=16 * 8 * 8, out_features=num_classes)
 #
 # Implementing the forward method:
     def forward(self, x):
@@ -37,7 +44,10 @@ class TinyNet(nn.Module):
 #           x.size(0) keeps the batch dimension, -1 flattens the rest.
 #         Pass through self.classifier.
 #         Return the output.
-        pass
+        x = self.features(x)
+        x = x.view(x.size(0), -1)
+        x = self.classifier(x)
+        return x
 
 
 # ===========================================================================
@@ -45,17 +55,18 @@ class TinyNet(nn.Module):
 # ===========================================================================
 if __name__ == "__main__":
     # Step 1: Instantiate TinyNet with num_classes=5.
-    model = None
+    model = TinyNet(num_classes=5)
     #
     # Step 2: Create a dummy input tensor of shape (1, 3, 32, 32).
     #         This represents one RGB 32×32 image.
-    dummy_input = None
+    dummy_input = torch.zeros(1, 3, 32, 32)
     #
     # Step 3: Pass it through the model and print:
     #         - Output shape (expected: [1, 5])
     #         - Raw output values (these are logits, not probabilities)
-    output = None
-
+    output = model(dummy_input)
+    print(f"  Output shape: {output.shape}")
+    print(f"  Raw output values:\n{output}")
 
     # ===========================================================================
     # Inspect Model Parameters

@@ -18,42 +18,48 @@ from model import TinyNet
 # Task 1: Compute Loss
 # ===========================================================================
 # Step 1: Instantiate TinyNet with num_classes=5.
-model = None
+model = TinyNet(num_classes=5)
 
 # Step 2: Create a dummy input of shape (4, 3, 32, 32) — a batch of 4 images.
-dummy_input = None
+dummy_input = torch.zeros(4, 3, 32, 32)
 
 # Step 3: Create dummy target labels as a tensor: [0, 2, 4, 1].
 #         These are the "correct" class indices for each image.
-targets = None
+targets = torch.tensor([0, 2, 4, 1], dtype=torch.long)
 
 # Step 4: Define the loss function using nn.CrossEntropyLoss().
-criterion = None
+criterion = nn.CrossEntropyLoss()
 
 # Step 5: Run a forward pass to get outputs, then compute the loss
 #         by passing (outputs, targets) to the loss function.
 #         Print the loss value using .item() to get a Python float.
-outputs=None
-loss=None
+outputs=forward_pass = model(dummy_input)
+loss=criterion(outputs, targets)
+print(f"  Loss: {loss.item():.6f}")
 
 # ===========================================================================
 # Task 2: One Optimizer Step
 # ===========================================================================
 # Step 1: Define an Adam optimizer using torch.optim.Adam().
 #         Pass model.parameters() and lr=0.001.
-optimizer = None
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 # Step 2: Print the loss from Task 1 (before any weight update).
 #
+print(f"  Loss before optimizer step: {loss.item():.6f}")
 # Step 3: Perform the standard update cycle:
 #         - Clear old gradients (they accumulate by default), hint: use .zero_grad()
 #         - Compute new gradients from the loss (.backward())
 #         - Update the weights (.step())
 #
+optimizer.zero_grad()
+loss.backward()
+optimizer.step()
 # Step 4: Run another forward pass with the same input and compute
 #         the new loss. Print it.
 #         It should differ from the first — the weights were updated.
-outputs_after = None
-loss_after = None
+outputs_after = model(dummy_input)
+loss_after = criterion(outputs_after, targets)
+print(f"  Loss after optimizer step: {loss_after.item():.6f}")
 
 
 # ===========================================================================
