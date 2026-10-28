@@ -33,7 +33,7 @@ SAMPLE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "exe
 # Store the result in a variable called 'transform'.
 transform = transforms.Compose([
     transforms.Resize((32, 32)),
-    transforms.ToTensor(),
+    transforms.ToTensor(),#make sure that image is a tensor, no array
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
@@ -61,13 +61,13 @@ class SimpleImageDataset(Dataset):
         #           Loop over each class folder, then over each file inside it.
         #           Store the full path and the integer label.
         #           Store as self.samples.
-        self.samples = []
+        self.samples = []# should store all images with the root_dir and label
         for cls in self.classes:
             cls_dir = os.path.join(root_dir, cls)
             for fname in os.listdir(cls_dir):
                 fpath = os.path.join(cls_dir, fname)
                 if os.path.isfile(fpath):
-                    self.samples.append((fpath, self.class_to_idx[cls]))
+                    self.samples.append((fpath, self.class_to_idx[cls]))#add the file path and label/index as tuple to the samples list we use this for the data loader 
 
     def __len__(self):
         #   Return the total number of samples.

@@ -9,13 +9,14 @@ Run this script to verify:
 
 Make sure you have completed model.py and dataset.py first.
 """
-
+#1 Epoch means one complete pass through the entire training dataset. In other words, during one epoch, the model sees every training example once.
+# batch size 2 means for a dataset with 100 samples, it will take 50 iterations to complete one epoch. Each iteration will process 2 samples at a time, and the model's weights will be updated after each iteration based on the computed gradients from those 2 samples.
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from torchvision import transforms
 
-from model import TinyNet
+from model import TinyNet# we deefined the model TinyNet thats we why have to call it from model
 from dataset import SimpleImageDataset
 
 
@@ -38,8 +39,8 @@ dataset = SimpleImageDataset(root_dir='/home/hswts124607/AI2-exercise-tasks/exer
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
 ]))
-dataloader = DataLoader(dataset, batch_size=2, shuffle=True, num_workers=0)
-
+dataloader = DataLoader(dataset, batch_size=2, shuffle=True, num_workers=0) #shuffle means that the batches will be randomly shuffled each epoch, which helps to improve the model's generalization by preventing it from learning the order of the data.
+#number of epochs is a hyperparameter that defines how many times the learning algorithm will work trough the entire training dataset. You can set the number of epochs by looking at the loss curve.
 # Step 3: Instantiate the model
 # Create TinyNet. The num_classes should match the number of classes
 # in your dataset — use len(dataset.classes) to get this automatically.
@@ -57,7 +58,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 # Step 5: Fetch one batch
 # Get one batch of (images, labels) from the dataloader.
 # Move both to the device. Tensors are moved with .to(device).
-images, labels = next(iter(dataloader))
+images, labels = next(iter(dataloader))#model and daa always needs to be on same device (same GPU or CPU) for computations to work correctly. If they are on different devices, PyTorch will raise an error.
 images = images.to(device)
 labels = labels.to(device)
 
@@ -84,8 +85,8 @@ optimizer.step()
 # Get predicted class indices using .argmax(dim=1) on the outputs.
 # Print predicted classes and actual labels side by side.
 # They will likely not match — the model is untrained.
-predictions = outputs.argmax(dim=1)
-print(f"  Predictions: {predictions}")
+predictions = outputs.argmax(dim=1)#argmax gives position of maximum value in the tensor along specified dimension. In this case, it gives the index of the class with the highest predicted probability for each sample in the batch.
+print(f"  Predictions: {predictions}")#it gives back position, which is the class index with the highest probability for each sample in the batch. This is used to determine the predicted class for each input image.
 print(f"  Actual labels: {labels}")
 
 # ===========================================================================
