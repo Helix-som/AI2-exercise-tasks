@@ -16,14 +16,14 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from torchvision import transforms
 
-from model import TinyNet# we deefined the model TinyNet thats we why have to call it from model
+from model import TinyNet# we defined the model TinyNet thats we why have to call it from model
 from dataset import SimpleImageDataset
 
 
 # ===========================================================================
 # Task 1: Wire the Full Pipeline
 # ===========================================================================
-
+# these are the important parts of a pytorch project: dataset.py, model.py, loss and optimizer (loss functions are class specific mostly used for images are CrossEntropy loss), then we all put them together in pipeline. Train.py will run the pipeline.py again and again. pipeline is one batch (just one sample) 
 # Step 1: Set device
 # Determine whether CUDA is available. Create a torch.device that is
 # 'cuda' if a GPU exists, otherwise 'cpu'. Print which device you're using.
