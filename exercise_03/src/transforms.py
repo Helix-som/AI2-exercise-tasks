@@ -13,7 +13,7 @@ Run this script to verify:
 from torchvision import transforms
 
 
-def get_train_transforms(image_size, augmentation=True):
+def get_train_transforms(image_size, augmentation=True):#transforming for the training data is there a differencebetween with augmentation and without augmentation
     """
     Returns the transform pipeline for training data.
 
@@ -37,11 +37,11 @@ def get_train_transforms(image_size, augmentation=True):
         #           and scales pixel values from [0, 255] to [0, 1].
         #   Step 5: Normalize with ImageNet mean and std.
         #           mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-        transform = transforms.Compose([
+        transform = transforms.Compose([#stack them all together
             transforms.RandomResizedCrop(image_size),
             transforms.RandomHorizontalFlip(),
             transforms.ColorJitter(
-                brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1
+                brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1#these are basic values
             ),
             transforms.ToTensor(),
             transforms.Normalize(
@@ -72,7 +72,7 @@ def get_train_transforms(image_size, augmentation=True):
     return transform
 
 
-def get_val_transforms(image_size):
+def get_val_transforms(image_size):#transorming for the validation data
     """
     Returns the transform pipeline for validation/test data.
     No random augmentations — must be deterministic.
@@ -93,7 +93,15 @@ def get_val_transforms(image_size):
     #           random variation.
     #   Step 3: ToTensor()
     #   Step 4: Normalize with same ImageNet mean and std.
-    transform = None # TODO: remove "None" and fill in your solution!
+    transform = transforms.Compose([#same pipeline as non-augmented training
+        transforms.Resize(image_size + 32),
+        transforms.CenterCrop(image_size),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225],
+        ),
+    ])
 
     return transform
 
