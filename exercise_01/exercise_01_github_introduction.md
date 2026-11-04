@@ -172,6 +172,10 @@ git checkout -b experiment
 git add exercise_01/experiment.txt
 git commit -m "Add experiment.txt on experiment branch"
 ```
+3.2 Pushing a new branch:
+```bash
+git push -u origin experiment
+```
 
 4. Switch back to the `main` branch:
 
@@ -223,7 +227,7 @@ Your fork is a snapshot of the course repository at the time you forked it. If t
 1. Add the original repository as a remote (one-time setup):
 
 ```bash
-git remote add upstream <original-repository-url>
+git remote add upstream https://github.com/smAIL-WS/AI2-exercise-tasks.git
 ```
 
 2. Fetch and merge the latest changes:
