@@ -54,7 +54,10 @@ def compute_accuracy(outputs, targets):
     total = targets.size(0)
 
     # TODO Step 4: Compute Accuracy: divide correct count by total count
-    accuracy = None # TODO: remove "None" and add your solution
+    if total ==0:
+        accuracy = 0.0
+    else:
+        accuracy = correct/total # TODO: remove "None" and add your solution
     
     return accuracy
 

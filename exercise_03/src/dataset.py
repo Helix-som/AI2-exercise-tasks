@@ -67,8 +67,8 @@ class PlantWildDataset(Dataset):
         
 
     def __len__(self):
-        # TODO: Return the total number of samples that are stored in self.samples.
-        pass
+        # : Return the total number of samples that are stored in self.samples.
+        return len(self.samples)
 
     def __getitem__(self, idx):
         """
@@ -80,7 +80,7 @@ class PlantWildDataset(Dataset):
         Returns:
             tuple: (image_tensor, label)
         """
-        # TODO: Load one image and return it with its label.
+        # Load one image and return it with its label.
         #
         #   Step 1: Get the file path and label from self.samples[idx].
         #   Step 2: Open the image with PIL and convert to "RGB".
@@ -89,7 +89,12 @@ class PlantWildDataset(Dataset):
         #           to RGB ensures a consistent 3-channel input.
         #   Step 3: Apply self.transform() if it is not None.
         #   Step 4: Return (image, label).
-        pass
+        img_path, label = self.samples[idx]
+        image = Image.open(img_path).convert("RGB")
+        if self.transform is not None:
+            image = self.transform(image)
+        return (image, label)
+
 
 
 # ===========================================================================

@@ -66,7 +66,7 @@ data/plantwild/
     │   └── ...
     └── ...
 ```
-
+usually dataset looks like this with already split done
 Each subfolder name is the class label. The train/val/test split is already done — you do not need to split the data yourself.
 
 ---
@@ -79,7 +79,8 @@ Each subfolder name is the class label. The train/val/test split is already done
 
 Before images can be fed into a CNN, they must be resized to a uniform dimension, converted to tensors, and normalized. Two separate pipelines are needed:
 
-**Training transforms** include random augmentations — flips, crops, color jitter — that create slightly different versions of each image every epoch. This forces the model to learn features that are robust to these variations rather than memorizing specific pixel patterns. The model never sees the exact same image twice.
+**Training transforms** include random augmentations — flips, crops, color jitter — that create slightly different versions of each image every epoch. This forces the model to learn features that are robust to these variations rather than memorizing specific pixel patterns. The model never sees the exact same image twice. 
+this is done where we load the data
 
 **Validation transforms** are deterministic — no randomness. The same image always produces the same tensor. This ensures validation metrics are stable and comparable across epochs.
 
@@ -96,12 +97,13 @@ The key methods:
 - `__getitem__`: loads one image by index, applies transforms, returns `(image, label)`
 
 Images are loaded lazily — only when `__getitem__` is called, not all at once. This keeps memory usage proportional to the batch size, not the dataset size.
+Lazyloading only loading the image when we need it.
 
 ---
 
 ## 3. CNN Architecture
 
-A Convolutional Neural Network for classification follows a standard pattern: repeating blocks of `Conv2d → BatchNorm2d → ReLU → MaxPool2d` that progressively reduce spatial dimensions while increasing channels, followed by a classification head (`Linear` layer) that maps the learned features to class scores.
+A Convolutional Neural Network for classification follows a standard pattern: repeating blocks of `Conv2d → BatchNorm2d → ReLU → MaxPool2d` convolution block, batch normalization, relu, maxpooling (how convolution works: 3 blue 1 brown YT) that progressively reduce spatial dimensions while increasing channels, followed by a classification head (`Linear` layer) that maps the learned features to class scores.
 
 Each block extracts increasingly abstract features: early blocks detect edges and textures, middle blocks detect parts (leaf shapes, spots), and deeper blocks detect patterns specific to each disease. `MaxPool2d` halves the spatial dimensions at each stage, so the network's receptive field grows while the computation stays manageable.
 
@@ -111,7 +113,7 @@ Each block extracts increasingly abstract features: early blocks detect edges an
 
 ## 4. The Training Loop
 
-The training loop repeats the same five steps for every batch, for every epoch:
+The training loop repeats the same five steps for every batch(size of batch is dependent on GPU computing space), for every epoch:
 
 1. **Forward pass** — images go through the model, producing logits (raw, unnormalized class scores)
 2. **Loss computation** — `CrossEntropyLoss` compares logits against true labels
