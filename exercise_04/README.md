@@ -268,7 +268,7 @@ After training completes, evaluate the best checkpoint on the held-out test set.
 Edit `slurm_submit_eval.sh` if needed — update the checkpoint path to match your best saved model. Then submit:
 
 ```bash
-sbatch slurm_submit_eval.sh
+sbatch submit_slurm_eval.sh
 ```
 
 Check the results:
