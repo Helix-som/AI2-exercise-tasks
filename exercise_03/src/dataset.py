@@ -90,7 +90,7 @@ class PlantWildDataset(Dataset):
         #   Step 3: Apply self.transform() if it is not None.
         #   Step 4: Return (image, label).
         img_path, label = self.samples[idx]
-        image = Image.open(img_path).convert("RGB")
+        image = Image.open(img_path).convert("RGB")#using pillow package to open the image and convert it to RGB format
         if self.transform is not None:
             image = self.transform(image)
         return (image, label)

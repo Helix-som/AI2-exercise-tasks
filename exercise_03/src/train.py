@@ -66,7 +66,7 @@ def train_one_epoch(model, dataloader, criterion, optimizer, device, log_interva
 
         #   Step 4: Compute the loss using the criterion (hint: criterion(outputs, labels)).
         #           Pass (outputs, labels) — not (labels, outputs).
-            loss = criterion(outputs, labels)
+            loss = criterion(outputs, labels)#basically average loss of this batch
 
         #   Step 5: Backward pass — compute gradients from the loss (hint: .backward()).
             # TODO: your code here - backward pass
@@ -74,12 +74,12 @@ def train_one_epoch(model, dataloader, criterion, optimizer, device, log_interva
     
         #   Step 6: Update weights with the optimizer (hint: .step()).
             # TODO: your code here - optimizer step
-            optimizer.step()
+            optimizer.step()#updating the weights
 
     
         # --- Accumulate metrics (do not modify) ---
             batch_size = images.size(0)
-            running_loss += loss.item() * batch_size
+            running_loss += loss.item() * batch_size#calculating total loss from average loss by mutilpying it with batch size
             running_correct += (outputs.argmax(dim=1) == labels).sum().item()
             total_samples += batch_size
 
@@ -149,7 +149,7 @@ def main(config_path):
     print(f"Loaded config from: {config_path}")
 
      # --- Setup ---
-    set_seed(config["seed"])
+    set_seed(config["seed"])#getting the seed value from config file and setting the seed for reproducibility
     device = torch.device(config["device"] if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
@@ -161,7 +161,7 @@ def main(config_path):
     writer = SummaryWriter(log_dir=log_dir)
 
     image_size = config["data"]["image_size"]
-    augmentation = config["data"]["augmentation"]
+    augmentation = config["data"]["augmentation"]#config file also says if we want to use augmentation or not, so we are getting that value from config file
 
     # Create training and validation datasets.
     #   Use PlantWildDataset with the appropriate root_dir
@@ -175,7 +175,7 @@ def main(config_path):
     # TODO: get the validation dataset, similar to train dataset, use the correct transforms!
     val_dataset = PlantWildDataset(
         root_dir=os.path.join(config["data"]["root_dir"], "val"),
-        transform=get_val_transforms(image_size),
+        transform=get_val_transforms(image_size),#2 different functions for train and val
     )
 
 
@@ -190,10 +190,10 @@ def main(config_path):
     )
     # TODO: create the validation dataloader, similar to train loader, use the val_dataset instead of train_dataset
     #       everything else stays the same
-    val_loader = Data_Loader(
+    val_loader = DataLoader(
         val_dataset,
         batch_size=config["data"]["batch_size"],
-        shuffle=False,
+        shuffle=False,#it doesnt make sense to shuffle images in validation set
         num_workers=config["data"]["num_workers"],
     )
 
@@ -228,7 +228,7 @@ def main(config_path):
     else:
         # TODO: Instantiate a torch.optim.SGD() optimizer with the same config values
         #       SGD additionally has a parameter "momentum", set it to momentum=0.9
-        optimizer =torch.optim.SGD(
+        optimizer =torch.optim.SGD(#stochastic gradient descent
             model.parameters(),
             lr=config["training"]["learning_rate"],
             weight_decay=config["training"]["weight_decay"],
@@ -276,7 +276,7 @@ def main(config_path):
         #   Compare val_acc with best_val_acc. If better, update best_val_acc
         #   and call save_checkpoint(). Save to the path built from
         #   config["checkpoint"]["save_dir"] and experiment_name + "_best.pt".
-        if val_acc > best_val_acc:
+        if val_acc > best_val_acc:#we check if validation accuracy is better than best validation before, if its better you save the checkpoint
             best_val_acc = val_acc
             ckpt_path = os.path.join(
                 config["checkpoint"]["save_dir"],

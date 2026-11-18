@@ -1,0 +1,8 @@
+/opt/conda_envs/course_env/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_03/src/train.py", line 301, in <module>
+    main(args.config)
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_03/src/train.py", line 193, in main
+    val_loader = Data_Loader(
+NameError: name 'Data_Loader' is not defined. Did you mean: 'val_loader'?
