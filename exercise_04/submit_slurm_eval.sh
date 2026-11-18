@@ -6,5 +6,8 @@
 
 source /opt/miniconda3/bin/activate /opt/conda_envs/course_env
 
+EXPERIMENT_NAME=$(grep '^experiment_name:' config.yaml | sed 's/experiment_name: *["'\'']\?\([^"'\'']*\)["'\'']\?/\1/')
+
 python src/evaluate.py --config config.yaml \
-    --checkpoint outputs/checkpoints/plantwild_plantcnn_best.pt
+    --checkpoint "outputs/checkpoints/${EXPERIMENT_NAME}_best.pt"
+
