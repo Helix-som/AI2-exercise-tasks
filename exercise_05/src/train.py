@@ -160,12 +160,7 @@ def main(config_path):
             weight_decay=config["training"]["weight_decay"],
         )
   else:
-        optimizer = torch.optim.SGD(
-            params,
-            lr=config["training"]["learning_rate"],
-            momentum=config["training"].get("momentum", 0.9),
-            weight_decay=config["training"]["weight_decay"],
-        )
+        optimizer = None # TODO: Remove "None" and write your code to load SGD optimizer. Note there is an extra argument "momentum".
 
   # --- LR Scheduler (do not modify) ---
   num_epochs = config["training"]["epochs"]
