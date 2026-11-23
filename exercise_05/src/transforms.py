@@ -55,27 +55,31 @@ class RandomHorizontalFlip:
         self.prob = prob
 
     def __call__(self, image, target):
-        # TODO: Flip the image and mirror box x-coordinates.
-        #
         #   Step 1: Generate a random number (random.random()) and only
         #           proceed if it falls below self.prob.
-        #
+        rand_num = random.random()
+        
         #   Step 2: Flip the image using F.hflip().
-        #
-        #   Step 3: Get the image width. Note that the image may be a
-        #           PIL image or a tensor at this point depending on
-        #           transform ordering — check which type it is and
-        #           use .width (PIL) or .shape[-1] (tensor) accordingly.
-        #
-        #   Step 4: Mirror the bounding boxes. Clone the boxes first
-        #           to avoid modifying the original. Only x-coordinates
-        #           change — y stays the same:
-        #               new_x1 = width - old_x2
-        #               new_x2 = width - old_x1
-        #           Hint: boxes[:, 0] is all x1 values, boxes[:, 2] is
-        #           all x2 values.
-        #
-        #   Step 5: Update target["boxes"] with the flipped boxes.
+        if rand_num < self.prob:
+            image = F.hflip(image)
+        
+            #   Step 3: Get the image width. Note that the image may be a
+            #           PIL image or a tensor at this point depending on
+            #           transform ordering — check which type it is and
+            #           use .width (PIL) or .shape[-1] (tensor) accordingly.
+            if isinstance(image, torch.Tensor):
+                    width = image.shape[-1]
+                else:
+                    width = image.width
+                
+            #   Step 4: Mirror the bounding boxes.
+            boxes = target["boxes"]
+            new_boxes = boxes.clone()
+            new_boxes[:, 0] = width - boxes[:, 2]
+            new_boxes[:, 2] = width - boxes[:, 0]
+        
+            #   Step 5: Update target["boxes"] with the flipped boxes.
+            target["boxes"] = new_boxes
 
         return image, target
 
@@ -91,29 +95,43 @@ class Resize:
         self.max_size = max_size or min_size
 
     def __call__(self, image, target):
-        # TODO: Resize the image and scale boxes to match.
-        #
         #   Step 1: Get the original height and width. Same type check
         #           as in RandomHorizontalFlip — PIL uses .size (returns
         #           w, h), tensor uses .shape[-2:] (returns h, w).
+        if isinstance(image, torch.Tensor):
+            h, w = image.shape[-2:]
+        else:
+            w, h = image.size
         #
         #   Step 2: Compute the scale factor so the shorter side becomes
         #           self.min_size. If self.max_size is set, ensure the
         #           longer side doesn't exceed it.
+        scale = self.min_size / min(h, w)
+        if self.max_size is not None:
+            scale = min(scale, self.max_size / max(h, w))
         #
         #   Step 3: Compute new_h and new_w by multiplying originals
         #           by the scale factor. Resize the image using
         #           F.resize(image, [new_h, new_w]).
-        #
+        new_h = int(h * scale)
+        new_w = int(w * scale)
+        image = F.resize(image, [new_h, new_w])
         #   Step 4: Compute separate scale factors for x and y:
         #               scale_x = new_w / old_w
         #               scale_y = new_h / old_h
         #           Multiply all box x-coordinates (columns 0 and 2)
         #           by scale_x, and y-coordinates (columns 1 and 3)
         #           by scale_y.
+        scale_x = new_w / w
+        scale_y = new_h / h
+        boxes = target["boxes"]
+        boxes[:, [0, 2]] *= scale_x
+        boxes[:, [1, 3]] *= scale_y
+        target["boxes"] = boxes
         #
         #   Step 5: Recompute target["area"] from the scaled boxes:
         #           area = (x2 - x1) * (y2 - y1).
+        target["area"] = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
 
         return image, target
 
