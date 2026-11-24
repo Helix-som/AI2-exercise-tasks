@@ -79,17 +79,17 @@ class PhenoBenchDetectionDataset(Dataset):
         # Step 2: Build the full path to the image file and open the image.
         img_path = os.path.join(self.root_dir, "images", file_name)
         image = None # TODO: Remove "None" and open the image with PIL(Image.open()) and convert to "RGB"
-        #
-        #   Step 3: Get all annotations for this image using
+        
+        # Step 3: Get all annotations for this image using
         annotations = None #TODO: Remove "None" and extract the annotations from self.img_to_anns using "image_id"
-        #
-        #   Step 4: Loop over the annotations. For each one:
-        #           - Extract the bbox field: [x, y, w, h] (COCO format)
-        #           - Convert the bbox format from PascalVOC to COCO [x1, y1, x2, y2] --> x1=x, y1=y, x2=x+w, y2=y+h
-        #           - Collect the category_id as the label
-        #           - Collect the area value
-        #           - Collect iscrowd (default to 0 if missing)
-        #           - Append each to separate lists (boxes, labels, areas, iscrowd).
+        
+        # Step 4: Loop over the annotations. For each one:
+        #         - Extract the bbox field: [x, y, w, h] (COCO format)
+        #         - Convert the bbox format from PascalVOC to COCO [x1, y1, x2, y2] --> x1=x, y1=y, x2=x+w, y2=y+h
+        #         - Collect the category_id as the label
+        #         - Collect the area value
+        #         - Collect iscrowd (default to 0 if missing)
+        #         - Append each to separate lists (boxes, labels, areas, iscrowd).
         boxes = []
         labels = []
         areas = []
@@ -102,14 +102,14 @@ class PhenoBenchDetectionDataset(Dataset):
             iscrowd.append(ann.get("iscrowd", 0))
             
         
-        #   Step 5: Convert lists to torch tensors and build the target dict:
-        #           - "boxes":    FloatTensor of shape [N, 4]
-        #           - "labels":   Int64Tensor of shape [N]
-        #           - "image_id": Int64Tensor of shape [1]
-        #           - "area":     FloatTensor of shape [N]
-        #           - "iscrowd":  UInt8Tensor of shape [N]
-        #           If no annotations exist for this image, create empty
-        #           tensors with the correct shapes (e.g. torch.zeros((0, 4))
+        # Step 5: Convert lists to torch tensors and build the target dict:
+        #         - "boxes":    FloatTensor of shape [N, 4]
+        #         - "labels":   Int64Tensor of shape [N]
+        #         - "image_id": Int64Tensor of shape [1]
+        #         - "area":     FloatTensor of shape [N]
+        #         - "iscrowd":  UInt8Tensor of shape [N]
+        #         If no annotations exist for this image, create empty
+        #         tensors with the correct shapes (e.g. torch.zeros((0, 4))
         #           for boxes).
         if len(boxes) > 0:
             boxes = torch.as_tensor(boxes, dtype=torch.float32)
@@ -136,7 +136,7 @@ class PhenoBenchDetectionDataset(Dataset):
                 "iscrowd": torch.zeros((0,), dtype=torch.uint8),
             }
         
-        #   Step 6: If self.transforms is not None, apply them:
+        # Step 6: If self.transforms is not None, apply them:
         if self.transform is not None:
             image, target = None # # TODO: Remove "None" and apply transformations. Hint: self.transforms()          
         
