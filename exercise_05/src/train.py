@@ -53,8 +53,7 @@ def train_one_epoch(model, dataloader, optimizer, device, log_interval=10):
     #           images are a single stacked tensor, here images is a
     #           tuple of individual tensors (different sizes possible).
     #           Use a list comprehension to move each image separately.
-    images = None # TODO: Remove "None" and add your code. Hint: Use list comprehension to loop through the images(list) in the batch and move the images to device using .to(device)
-    #
+    images = [img.to(device) for img in images]
     #   Step 2: Move targets to the device. Each target is a dict of
     #           tensors. Use a list comprehension that loops over each
     #           target dict and moves every value to the device.
