@@ -140,42 +140,34 @@ def get_detection_model(name, num_classes, pretrained=True):
     """
     name = name.lower()
 
-    # TODO: Load the requested model and replace its classification head.
-    #
-    #   Each model type has a different way to swap the head. Handle
-    #   each name with an if/elif chain and raise ValueError for unknown names.
-    #   Hint: See the imported classes at the top of this file for the right loader functions
-    #
-    #   --- Faster R-CNN variants ("fasterrcnn_resnet50", "fasterrcnn_mobilenet") ---
-    #
-    #   Step 1: Choose the right loader function and weights enum based on name.
-    #           Set weights to the .DEFAULT member if pretrained, else None.
-    #           Call the loader to create the model.
-    #
-    #   Step 2: The pretrained head classifies 91 COCO classes. To replace it:
-    #           - Read how many input features the current head expects from
-    #             model.roi_heads.box_predictor.cls_score.in_features
-    #           - Create a new FastRCNNPredictor(in_features, num_classes)
-    #           - Assign it to model.roi_heads.box_predictor
-    #
+    # Load the requested model and replace its classification head.
+    # Each model type has a different way to swap the head. Handle each name with an if/elif chain and raise ValueError for unknown names.
     if name == "fasterrcnn_resnet50":
-        pass
-
+        weights = FasterRCNN_ResNet50_FPN_Weights.DEFAULT if pretrained else None
+        model = fasterrcnn_resnet50_fpn(weights=weights)
+        in_features = model.roi_heads.box_predictor.cls_score.in_features
+        model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
+    
     elif name == "fasterrcnn_mobilenet":
-        pass
+        weights = FasterRCNN_MobileNet_V3_Large_FPN_Weights.DEFAULT if pretrained else None
+        model = fasterrcnn_mobilenet_v3_large_fpn(weights=weights)
+        in_features = model.roi_heads.box_predictor.cls_score.in_features
+        model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
+    
 
     #   --- RetinaNet ("retinanet_resnet50") ---
-    #
-    #   Step 1: Load with retinanet_resnet50_fpn(weights=...).
-    #
-    #   Step 2: The classification head lives at model.head.classification_head.
-    #           Read in_channels from its .cls_logits.in_channels and num_anchors
-    #           from its .num_anchors attribute.
-    #           Replace it with a new RetinaNetClassificationHead(
-    #               in_channels, num_anchors, num_classes).
-    #
+    # TODO: Remove "None" in the below lines of code and load the weights, model, in_channels and num_anchors. Hint: Loading is similar to previous models.
     elif name == "retinanet_resnet50":
-        pass
+        weights = None 
+        model = None
+        in_channels = None
+        num_anchors = None
+        model.head.classification_head = RetinaNetClassificationHead(
+            in_channels=in_channels,
+            num_anchors=num_anchors,
+            num_classes=num_classes,
+        )
+        
     
 
     #   --- RT-DETR ("rtdetr") — Transformer detector ---
