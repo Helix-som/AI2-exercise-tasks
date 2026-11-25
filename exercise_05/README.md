@@ -56,7 +56,7 @@ ln -s /data/phenobench_detection/phenobench_256 data/phenobench_256
 ### Expected Folder Structure
 
 ```
-data/phenobench/
+data/phenobench_256/
 ├── annotations/
 │   ├── train.json            ← COCO JSON annotations
 │   └── val.json
