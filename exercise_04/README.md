@@ -61,7 +61,7 @@ In machine learning, there are two types of parameters:
  
 - **Model parameters**: learned during training (weights, biases). You do not set these manually — backpropagation handles them.
 - **Hyperparameters**: set *before* training begins and control how the model learns. Examples: learning rate, dropout probability, batch size, optimizer choice, number of layers.
-Choosing good hyperparameters matters. A learning rate that is too high causes divergence; too low and training stalls. The right dropout prevents overfitting; too much and the model underfits. Manually trying combinations is slow and does not scale — you need a systematic approach.
+Choosing good hyperparameters matters. A learning rate that is too high causes divergence; too low and training stalls. The right dropout prevents overfitting; too much and the model underfits. Manually trying combinations is slow and does not scale — you need a systematic approach.You will find which HP is improving model the most, in this case we have a ausgewogenes dataset bath size plays no big role. We can also finetune predefined models.
  
 ---
 
@@ -95,9 +95,9 @@ Optuna is a Python framework for hyperparameter optimization. Its core concepts:
 ```python
 import optuna
 
-def objective(trial):
+def objective(trial):#objective is the function to give information about which hyperparameters should be optimized, what opotuna uses to optimize
     lr = trial.suggest_float("lr", 1e-5, 1e-2, log=True)
-    dropout = trial.suggest_float("dropout", 0.2, 0.7)
+    dropout = trial.suggest_float("dropout", 0.2, 0.7)#there are also categorical suggestions
     # ... train model with these hyperparameters ...
     return val_accuracy
 
@@ -134,7 +134,7 @@ These control *how* the model learns, independent of architecture:
 
 - **Learning rate** — most impactful hyperparameter; always worth tuning.
 - **Dropout** — regularization strength; depends on dataset size and complexity.
-- **Batch size** — affects gradient noise and convergence speed.
+- **Batch size** — affects gradient noise and convergence speed. higher batch size-->faster learning but also higher risk of overfitting
 
 ### Optimizer choice
 

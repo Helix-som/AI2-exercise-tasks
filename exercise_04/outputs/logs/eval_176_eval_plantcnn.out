@@ -1,0 +1,2 @@
+Error: Checkpoint not found at outputs/checkpoints/plantwild_plantcnn_best.pt
+Run training first: python src/train.py --config config.yaml

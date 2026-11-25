@@ -1,0 +1,39 @@
+[I 2026-11-18 12:02:38,116] A new study created in memory with name: plantwild_optuna_plantcnn
+[W 2026-11-18 12:02:38,401] Trial 0 failed with parameters: {'learning_rate': 2.664577484356477e-05, 'dropout': 0.40123782764378346, 'batch_size': 64} because of the following error: FileNotFoundError(2, 'No such file or directory').
+Traceback (most recent call last):
+  File "/opt/conda_envs/course_env/lib/python3.10/site-packages/optuna/study/_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/optuna_search.py", line 115, in <lambda>
+    lambda trial: objective(trial, base_config),
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/optuna_search.py", line 87, in objective
+    val_accuracy = train_and_evaluate(config)  # TODO: Replace "None" with the actual call to train_and_evaluate(config)
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/src/train.py", line 115, in train_and_evaluate
+    train_dataset = PlantWildDataset(
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/src/dataset.py", line 19, in __init__
+    d for d in os.listdir(root_dir)
+FileNotFoundError: [Errno 2] No such file or directory: 'data/plantwild/train'
+[W 2026-11-18 12:02:38,402] Trial 0 failed with value None.
+Traceback (most recent call last):
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/optuna_search.py", line 169, in <module>
+    main(args.config)
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/optuna_search.py", line 114, in main
+    study.optimize(
+  File "/opt/conda_envs/course_env/lib/python3.10/site-packages/optuna/study/study.py", line 502, in optimize
+    _optimize(
+  File "/opt/conda_envs/course_env/lib/python3.10/site-packages/optuna/study/_optimize.py", line 68, in _optimize
+    _optimize_sequential(
+  File "/opt/conda_envs/course_env/lib/python3.10/site-packages/optuna/study/_optimize.py", line 165, in _optimize_sequential
+    frozen_trial_id = _run_trial(study, func, catch)
+  File "/opt/conda_envs/course_env/lib/python3.10/site-packages/optuna/study/_optimize.py", line 263, in _run_trial
+    raise func_err
+  File "/opt/conda_envs/course_env/lib/python3.10/site-packages/optuna/study/_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/optuna_search.py", line 115, in <lambda>
+    lambda trial: objective(trial, base_config),
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/optuna_search.py", line 87, in objective
+    val_accuracy = train_and_evaluate(config)  # TODO: Replace "None" with the actual call to train_and_evaluate(config)
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/src/train.py", line 115, in train_and_evaluate
+    train_dataset = PlantWildDataset(
+  File "/home/hswts124607/AI2-exercise-tasks/exercise_04/src/dataset.py", line 19, in __init__
+    d for d in os.listdir(root_dir)
+FileNotFoundError: [Errno 2] No such file or directory: 'data/plantwild/train'

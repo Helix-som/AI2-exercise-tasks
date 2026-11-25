@@ -1,0 +1,8 @@
+[I 2026-11-18 12:07:32,908] A new study created in memory with name: plantwild_optuna_plantcnn
+/opt/conda_envs/course_env/lib/python3.10/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+[I 2026-11-18 12:10:58,579] Trial 0 finished with value: 0.3730445246690734 and parameters: {'learning_rate': 0.00267551011788303, 'dropout': 0.24585035630339608, 'batch_size': 16}. Best is trial 0 with value: 0.3730445246690734.
+[I 2026-11-18 12:14:24,564] Trial 1 finished with value: 0.33574007220216606 and parameters: {'learning_rate': 6.935597312206301e-05, 'dropout': 0.43584142151137406, 'batch_size': 16}. Best is trial 0 with value: 0.3730445246690734.
+[I 2026-11-18 12:17:50,638] Trial 2 finished with value: 0.38267148014440433 and parameters: {'learning_rate': 0.0007638250471047588, 'dropout': 0.541313675977304, 'batch_size': 16}. Best is trial 2 with value: 0.38267148014440433.
+[I 2026-11-18 12:21:16,914] Trial 3 finished with value: 0.35499398315282793 and parameters: {'learning_rate': 0.0036887815841732453, 'dropout': 0.34115102138281084, 'batch_size': 64}. Best is trial 2 with value: 0.38267148014440433.
+slurmstepd-AE-X-SFmueller: error: *** JOB 151 ON AE-X-SFmueller CANCELLED AT 2026-11-18T12:23:22 ***
