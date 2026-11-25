@@ -50,7 +50,7 @@ Note that while annotations are stored in COCO format (`[x, y, width, height]`) 
 Create a symlink:
 
 ```bash
-ln -s /ai2_ex/data/detection/phenobench_256 data/phenobench_256
+ln -s /data/phenobench_detection/phenobench_256 data/phenobench_256
 ```
 
 ### Expected Folder Structure
