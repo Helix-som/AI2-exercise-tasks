@@ -47,7 +47,7 @@ class Normalize:
 
 class RandomHorizontalFlip:
     """
-    Randomly flip image and boxes horizontally with given probability.
+    Randomly flip image and boxes horizontally with given probability. We can set a probability of flipping the image and boxes horizontally. If the random number generated is less than the probability, the image and boxes will be flipped.
     Boxes are in [x1, y1, x2, y2] format.
     """
 
@@ -69,7 +69,7 @@ class RandomHorizontalFlip:
             #           use .width (PIL) or .shape[-1] (tensor) accordingly.
             if isinstance(image, torch.Tensor):
                     width = image.shape[-1]
-                else:
+            else:
                     width = image.width
                 
             #   Step 4: Mirror the bounding boxes.
@@ -86,7 +86,7 @@ class RandomHorizontalFlip:
 
 class Resize:
     """
-    Resize image so the shorter side equals min_size.
+    Resize image so the shorter side equals min_size. we can scale it down to wahtever size we want. If max_size is set, ensure the longer side doesn't exceed it.
     Scale all bounding box coordinates proportionally.
     """
 

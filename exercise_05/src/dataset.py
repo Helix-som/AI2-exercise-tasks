@@ -41,12 +41,12 @@ class PhenoBenchDetectionDataset(Dataset):
         #           The JSON contains three keys: "images", "annotations",
         #           "categories".
         with open(annotation_file, "r") as f:
-            coco_data = None # TODO: Remove "None" and add your code; Hint: Use json.load()
+            coco_data = json.load(f) # TODO: Remove "None" and add your code; Hint: Use json.load()
         #
         #   Step 2: Store the image list as self.images and the category
         #           list as self.categories.
-        self.images = None # TODO: Remove "None" and extract "images" from coco_data dictionary
-        self.categories = None # TODO: Remove "None" and extract "categories" from coco_data dictionary
+        self.images = coco_data["images"] # TODO: Remove "None" and extract "images" from coco_data dictionary
+        self.categories = coco_data["categories"] # TODO: Remove "None" and extract "categories" from coco_data dictionary
         #
         #   Step 3: Loop over all "annotations" from coco_data dictionary — each has an "image_id"
         #           field. Append each annotation to the list for its image_id. 
@@ -61,7 +61,7 @@ class PhenoBenchDetectionDataset(Dataset):
     def __len__(self):
         # TODO: Return the number of images in the dataset.
         #       Hint: self.images is a list.
-        pass
+        return len(self.images)
 
     def __getitem__(self, idx):
         """
@@ -72,16 +72,16 @@ class PhenoBenchDetectionDataset(Dataset):
             target (dict): Contains boxes, labels, image_id, area, iscrowd.
         """
         # Step 1: Extract the image information
-        img_info = None # TODO: Remove "None" and get the image info dict from self.images[idx]
-        image_id = None # TODO: Remove "None" and extract "id" from img_info
-        file_name = None # TODO: Remove "None" and extract "file_name" from img_info
+        img_info = self.images[idx] # TODO: Remove "None" and get the image info dict from self.images[idx]
+        image_id = img_info["id"] # TODO: Remove "None" and extract "id" from img_info
+        file_name = img_info["file_name"] # TODO: Remove "None" and extract "file_name" from img_info
     
         # Step 2: Build the full path to the image file and open the image.
         img_path = os.path.join(self.root_dir, "images", file_name)
-        image = None # TODO: Remove "None" and open the image with PIL(Image.open()) and convert to "RGB"
+        image = Image.open(img_path).convert("RGB") # TODO: Remove "None" and open the image with PIL(Image.open()) and convert to "RGB"
         
         # Step 3: Get all annotations for this image using
-        annotations = None #TODO: Remove "None" and extract the annotations from self.img_to_anns using "image_id"
+        annotations = self.img_to_anns[image_id] #TODO: Remove "None" and extract the annotations from self.img_to_anns using "image_id"
         
         # Step 4: Loop over the annotations. For each one:
         #         - Extract the bbox field: [x, y, w, h] (COCO format)
@@ -137,8 +137,8 @@ class PhenoBenchDetectionDataset(Dataset):
             }
         
         # Step 6: If self.transforms is not None, apply them:
-        if self.transform is not None:
-            image, target = None # # TODO: Remove "None" and apply transformations. Hint: self.transforms()          
+        if self.transforms is not None:
+            image, target = self.transforms(image,target) # # TODO: Remove "None" and apply transformations. Hint: self.transforms()          
         
         return (image, target)
          
